@@ -1,0 +1,26 @@
+#---No Comment---
+#Fri Mar 21 21:08:01 EST 2008
+startup\ category=Kids Movies
+Action=9abc
+Kids\ Movies=1234
+Other=h
+Comedy=defg
+categories=Kids Movies,Mellissa Movies,Action,Comedy,Other
+Mellissa\ Movies=5678
+h=H\:\\GENERAL MOVIES\\OTHER MOVIES
+9=\\\\Blackbox\\movie disk 3\\MOVIES\\GENERAL MOVIES\\ACTION
+g=F\:\\Movies\\GENERAL MOVIES\\COMEDY
+8=F\:\\Movies\\GENERAL MOVIES\\MELLISSA MOVIES
+f=H\:\\GENERAL MOVIES\\COMEDY
+7=H\:\\GENERAL MOVIES\\MELLISSA MOVIES
+e=\\\\Blackbox\\Movie Disk\\Movies\\General Movies\\comedy
+6=\\\\Blackbox\\Movie Disk\\Movies\\General Movies\\Mellissa Movies
+d=\\\\Blackbox\\movie disk 3\\MOVIES\\GENERAL MOVIES\\COMEDY
+5=\\\\Blackbox\\movie disk 3\\MOVIES\\GENERAL MOVIES\\MELLISSA MOVIES
+4=F\:\\Movies\\KIDS MOVIES
+c=F\:\\Movies\\GENERAL MOVIES\\ACTION
+3=H\:\\KIDS MOVIES
+b=H\:\\GENERAL MOVIES\\ACTION
+2=\\\\Blackbox\\Movie Disk\\Movies\\Kids Movies
+a=\\\\Blackbox\\Movie Disk\\Movies\\General Movies\\Action
+1=\\\\Blackbox\\movie disk 3\\MOVIES\\KIDS MOVIES
