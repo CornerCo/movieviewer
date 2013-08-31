@@ -611,7 +611,8 @@ public final class MovieViewer extends javax.swing.JFrame {
 
                     if (name.equals("video_ts.ifo") || name.endsWith("wmv") || name.endsWith("avi")
                             || name.endsWith("mpg") || name.endsWith("mpeg") || name.endsWith("mod")
-                            || name.endsWith("ts") || name.endsWith("m2ts") || name.endsWith("mkv")) {
+                            || name.endsWith("ts") || name.endsWith("m2ts") || name.endsWith("mkv")
+                            || name.endsWith("mp4")) {
                         list.add(file);
                     }
                 }
