@@ -6,6 +6,7 @@
 package com.github.cornerco.movieviewer;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.StringTokenizer;
 import javax.swing.ImageIcon;
 
@@ -107,6 +108,10 @@ class MovieEntry implements java.lang.Comparable{
 
     public File getFile() {
         return file;
+    }
+    
+    public Path getPath() {
+        return file.toPath();
     }
 
     public int compareTo(Object o) {

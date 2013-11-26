@@ -111,8 +111,7 @@ public class Settings {
     }
     public void addFolderToCategory(String cat, File folder)
     {
-       System.out.println("doing add folder");
-        if(categories.containsKey(cat))
+       if(categories.containsKey(cat))
        {
             ArrayList list = (ArrayList) categories.get(cat);
            list.add(folder);

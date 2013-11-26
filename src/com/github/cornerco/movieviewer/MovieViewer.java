@@ -70,10 +70,20 @@ public final class MovieViewer extends javax.swing.JFrame {
         pass.setLocationRelativeTo(this);
         getDefaultProperties();
         startUpCategory = settings.getStartUpCategory();
-
-
-        if (startUpCategory.equals("")) {
-            startUpCategory = categorisations[0];
+        categorisations = settings.getAllCategories();
+        
+        System.out.println(startUpCategory );
+        if (startUpCategory==null) {
+            if(categorisations.length !=0){
+               startUpCategory = categorisations[0];
+             
+            }
+            else
+            {
+                startUpCategory = defaultCat;
+                categorisations[0] = defaultCat;
+            }
+            
         }
 
         // System.out.println("inside movieviewer startup category  " + startUpCategory);
@@ -177,6 +187,12 @@ public final class MovieViewer extends javax.swing.JFrame {
 
     public void updateCategorisations() {
         jList2.setListData(new Vector(Arrays.asList(categorisations)));
+    }
+    
+    public void setStartUpCategory(String cat)
+    {
+        startUpCategory =cat;
+        
     }
 
     public boolean passGood() {
@@ -323,7 +339,8 @@ public final class MovieViewer extends javax.swing.JFrame {
         // last_refresh = currentTime;
         // this.cat = cat;
         currentFolders = settings.getCategory(cat);
-        createMovieEntries(currentFolders);
+        if(currentFolders!=null)
+            createMovieEntries(currentFolders);
 
     }
 
@@ -361,6 +378,8 @@ public final class MovieViewer extends javax.swing.JFrame {
         return jList2.getSelectedIndex();
 
     }
+    
+    
 
     /*   public void refreshScreen()
      {
@@ -569,6 +588,7 @@ public final class MovieViewer extends javax.swing.JFrame {
         ArrayList mev = new ArrayList();
         ArrayList files = new ArrayList();
         for (int c = 0; c < fileSet.size(); c++) {
+            
             getMovieFiles(files, (File) fileSet.get(c));
             // System.out.println(files);
             for (int c2 = 0; c2 < files.size(); c2++) {
@@ -588,6 +608,7 @@ public final class MovieViewer extends javax.swing.JFrame {
                 mev.add(me);
 
             }
+            files.clear();
         }
         ///// temp here to change all 0 or null viewing values to 1
         //this.writeSettings();
@@ -632,6 +653,23 @@ public final class MovieViewer extends javax.swing.JFrame {
         //writeSettings();
 
     }
+    
+    public void refreshFileList(boolean DeleteFlag)
+    {
+         
+        int index = jList1.getSelectedIndex();
+         createMovieEntries(currentFolders);
+        jList1.setListData(new Vector(movies));
+        if(DeleteFlag ==true)
+        {
+            if(index == 0)
+            index =1;
+            else
+                index = index-1;
+        }
+        jList1.setSelectedIndex(index);
+    }
+    
 
     public void removeFileFromProtected() {
         int index = jList1.getSelectedIndex();
@@ -1391,7 +1429,7 @@ public final class MovieViewer extends javax.swing.JFrame {
         }
 
         CategoryNames.setProperty(catNameVariable, categoryList);
-        CategoryNames.setProperty(defaultCat, settings.getStartUpCategory());
+        CategoryNames.setProperty(defaultCat, startUpCategory);
 
         try {
             FileOutputStream out = new FileOutputStream(catNameFile);

@@ -6,8 +6,15 @@
 
 package com.github.cornerco.movieviewer;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -83,6 +90,11 @@ public class RightClickContext extends javax.swing.JDialog {
 
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton2.setText("Delete");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,12 +132,13 @@ public class RightClickContext extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        MovieViewer m = (MovieViewer)(this.getParent());
+        MovieViewer mv = (MovieViewer)(this.getParent());
         JCheckBox jcb = (JCheckBox) evt.getSource();
         if(jcb.isSelected())
-            m.addFileToProtected();
+            mv.addFileToProtected();
         else
-            m.removeFileFromProtected();
+            mv.removeFileFromProtected();
+       
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -144,6 +157,45 @@ public class RightClickContext extends javax.swing.JDialog {
             m.setViewCounter(f.getAbsolutePath(),i);  
         } 
     }//GEN-LAST:event_jTextField1KeyTyped
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        //System.out.println(entry.toString());
+        File f = entry.getFile();
+        String fname = f.toString();
+        fname = fname.toLowerCase();
+
+        int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " +entry.toString(), "Delete?",  JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION){
+            int reply2 = JOptionPane.showConfirmDialog(null, "Are you sure you REALLY SURE" , "Delete?",  JOptionPane.YES_NO_OPTION);
+            if (reply2 == JOptionPane.YES_OPTION){
+            
+                if (!fname.endsWith("ifo"))
+                    f.delete();
+
+                else
+                {
+                    //yeah don't do this...if a ifo is in the root directory everything will be wiped out
+                    //VERY DANGEROUS STOP STOP
+                        File Dir = f.getParentFile();
+                        //for(File f2: Dir.listFiles()) f2.delete();
+                        //Dir.delete();
+                    f.delete();//delete the ifo and delete the rest by hand
+                    File f3 = new File(Dir+"\\DELETE EVERYTHING.GO");
+                    try {
+                        Writer output = new BufferedWriter(new FileWriter(f3));
+                        output.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(RightClickContext.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        
+        MovieViewer mv = (MovieViewer) this.getParent();
+        mv.refreshFileList(true);
+        this.dispose();
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
     
     /**
      * @param args the command line arguments
