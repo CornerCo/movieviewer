@@ -4,3 +4,5 @@ Nav
 refresh
 backup
 *~
+*.mvd
+nbproject/private
