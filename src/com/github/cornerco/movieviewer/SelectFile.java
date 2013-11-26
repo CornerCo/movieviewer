@@ -68,20 +68,14 @@ public class SelectFile extends javax.swing.JFrame {
     }//GEN-LAST:event_jFileChooser1KeyPressed
 
     private void jFileChooser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFileChooser1ActionPerformed
-         //System.out.println(evt.getActionCommand());
-         
-         if(evt.getActionCommand().equals("ApproveSelection"))
+if(evt.getActionCommand().equals("ApproveSelection"))
          {
              JFileChooser j = (JFileChooser)evt.getSource();
              File f = j.getSelectedFile();
              me.setVeiwerProgram(f);
          }
          
-         //this.setVisible(false);
          this.dispose();
-       
-
-        
     }//GEN-LAST:event_jFileChooser1ActionPerformed
     
     /**

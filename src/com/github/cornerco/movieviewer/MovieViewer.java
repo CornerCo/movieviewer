@@ -38,7 +38,6 @@ public final class MovieViewer extends javax.swing.JFrame {
     String search = "Alphabetical";
     PasswordJDialog1 pass = null;
     ArrayList<MovieEntry> movies = new ArrayList();
-    // Robot robot = null;
     boolean playing = false;
     String fullpathOfMoviePlaying = "";
     Boolean showcat = true;
@@ -47,19 +46,16 @@ public final class MovieViewer extends javax.swing.JFrame {
     final String catList = "CategoryProperties.mvd";
     final String catNameVariable = "categoryNames";
     final String defaultCat = "defaultCat";
-    private File viewingProgram = new File("C:\\\"Program Files\"\\CyberLink\\PowerDVD\\PowerDVD.exe");
     private boolean down;
     int xSize = 0;
     int ySize = 0;
     JPanel p = null;
-    // ImageIcon imageIcon =null;
     ImageIcon imageIcon2 = new ImageIcon("cat_background.gif");
     String startUpBackgroundImage = "";
-    //int currentMouseJumpX = 0;
-    // int currentMouseJumpY = 0;
     private static File f;
     private static FileChannel channel;
     private static FileLock lock;
+    private File viewingProgram;
 
     public MovieViewer() {
         //   try {
@@ -71,19 +67,17 @@ public final class MovieViewer extends javax.swing.JFrame {
         getDefaultProperties();
         startUpCategory = settings.getStartUpCategory();
         categorisations = settings.getAllCategories();
-        
-        System.out.println(startUpCategory );
-        if (startUpCategory==null) {
-            if(categorisations.length !=0){
-               startUpCategory = categorisations[0];
-             
-            }
-            else
-            {
+
+        System.out.println(startUpCategory);
+        if (startUpCategory == null) {
+            if (categorisations.length != 0) {
+                startUpCategory = categorisations[0];
+
+            } else {
                 startUpCategory = defaultCat;
                 categorisations[0] = defaultCat;
             }
-            
+
         }
 
         // System.out.println("inside movieviewer startup category  " + startUpCategory);
@@ -98,20 +92,24 @@ public final class MovieViewer extends javax.swing.JFrame {
         initComponents();
 
 
-        jLabel1.setEditable(false);
-        jList1.setFocusTraversalKeysEnabled(false);
-        jList1.setFocusTraversalKeysEnabled(false);
+        movieList.setFocusTraversalKeysEnabled(false);
+        movieList.setFocusTraversalKeysEnabled(false);
         updateFileCount();
-        jList1.setListData(new Vector(movies));
-        jList2.setSelectedValue(startUpCategory, true);
-        jList1.setCellRenderer(new MovieCellRenderer());
+        movieList.setListData(new Vector(movies));
+        categoryList.setSelectedValue(startUpCategory, true);
+        movieList.setCellRenderer(new MovieCellRenderer());
         jLabel6.setText("" + settings.getTotalMoviesViewed());
-        jList1.setSelectedIndex(0);
+        movieList.setSelectedIndex(0);
         Toolkit tk = Toolkit.getDefaultToolkit();
+
+        Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         xSize = ((int) tk.getScreenSize().getWidth());
         ySize = ((int) tk.getScreenSize().getHeight());
-        this.setSize(xSize, ySize);
-        this.setVisible(true);
+
+        setSize(bounds.getSize());
+        setLocation(bounds.getLocation());
+        setVisible(true);
+
         playing = false;
         p = (JPanel) this.getContentPane();
         p.setBackground(new Color(132, 176, 142));
@@ -122,18 +120,18 @@ public final class MovieViewer extends javax.swing.JFrame {
 //         final String UP_ARROW = "up-arrow";
 //        final String DOWN_ARROW = "down-arrow";
 //
-        jList1.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), LEFT_ARROW);
-        jList1.getActionMap().put(LEFT_ARROW, new AbstractAction() {
+        movieList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), LEFT_ARROW);
+        movieList.getActionMap().put(LEFT_ARROW, new AbstractAction() {
             public void actionPerformed(ActionEvent event) {
-                int size = (jList1.getModel()).getSize() - 1;
+                int size = (movieList.getModel()).getSize() - 1;
                 System.out.println(size);
-                int currentIndexMinus1 = jList1.getSelectedIndex() - 1;
+                int currentIndexMinus1 = movieList.getSelectedIndex() - 1;
                 if (currentIndexMinus1 < 0) {
-                    jList1.setSelectedIndex(size);
-                    jList1.ensureIndexIsVisible(size);
+                    movieList.setSelectedIndex(size);
+                    movieList.ensureIndexIsVisible(size);
                 } else {
-                    jList1.setSelectedIndex(currentIndexMinus1);
-                    jList1.ensureIndexIsVisible(currentIndexMinus1);
+                    movieList.setSelectedIndex(currentIndexMinus1);
+                    movieList.ensureIndexIsVisible(currentIndexMinus1);
                 }
 
 
@@ -141,18 +139,18 @@ public final class MovieViewer extends javax.swing.JFrame {
         });
 
 
-        jList1.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), RIGHT_ARROW);
-        jList1.getActionMap().put(RIGHT_ARROW, new AbstractAction() {
+        movieList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), RIGHT_ARROW);
+        movieList.getActionMap().put(RIGHT_ARROW, new AbstractAction() {
             public void actionPerformed(ActionEvent event) {
 
-                int currentIndexPlus1 = jList1.getSelectedIndex() + 1;
+                int currentIndexPlus1 = movieList.getSelectedIndex() + 1;
 
-                if (currentIndexPlus1 > jList1.getLastVisibleIndex()) {
-                    jList1.setSelectedIndex(0);
+                if (currentIndexPlus1 > movieList.getLastVisibleIndex()) {
+                    movieList.setSelectedIndex(0);
                 } else {
-                    jList1.setSelectedIndex(currentIndexPlus1);
+                    movieList.setSelectedIndex(currentIndexPlus1);
                 }
-                jList1.ensureIndexIsVisible(currentIndexPlus1);
+                movieList.ensureIndexIsVisible(currentIndexPlus1);
 
             }
         });
@@ -186,13 +184,12 @@ public final class MovieViewer extends javax.swing.JFrame {
     }
 
     public void updateCategorisations() {
-        jList2.setListData(new Vector(Arrays.asList(categorisations)));
+        categoryList.setListData(new Vector(Arrays.asList(categorisations)));
     }
-    
-    public void setStartUpCategory(String cat)
-    {
-        startUpCategory =cat;
-        
+
+    public void setStartUpCategory(String cat) {
+        startUpCategory = cat;
+
     }
 
     public boolean passGood() {
@@ -339,8 +336,9 @@ public final class MovieViewer extends javax.swing.JFrame {
         // last_refresh = currentTime;
         // this.cat = cat;
         currentFolders = settings.getCategory(cat);
-        if(currentFolders!=null)
+        if (currentFolders != null) {
             createMovieEntries(currentFolders);
+        }
 
     }
 
@@ -365,9 +363,9 @@ public final class MovieViewer extends javax.swing.JFrame {
         if (!this.isVisible()) {
             this.setVisible(true);
         }
-        jList1.requestFocus();
+        movieList.requestFocus();
 
-        jList1.setSelectedIndex(index);
+        movieList.setSelectedIndex(index);
     }
 
     public String getDefaultCat() {
@@ -375,11 +373,9 @@ public final class MovieViewer extends javax.swing.JFrame {
     }
 
     public int getSelectedCat() {
-        return jList2.getSelectedIndex();
+        return categoryList.getSelectedIndex();
 
     }
-    
-    
 
     /*   public void refreshScreen()
      {
@@ -445,8 +441,8 @@ public final class MovieViewer extends javax.swing.JFrame {
         if (!playing) {
             try {
                 //this.setVisible(false);
-                jList1.requestFocus();
-                int selection = jList1.getSelectedIndex();
+                movieList.requestFocus();
+                int selection = movieList.getSelectedIndex();
                 MovieEntry me = movies.get(selection);
                 settings.updateViewings(me.getFile().getAbsolutePath());
                 createMovieEntries(currentFolders);
@@ -455,8 +451,8 @@ public final class MovieViewer extends javax.swing.JFrame {
                 // jList1.setValueIsAdjusting(true);
                 // jList1.setListData(new Vector(movies);
                 //  jList1.setValueIsAdjusting(false);
-                jList1.requestFocus();
-                jList1.setSelectedIndex(selection);
+                movieList.requestFocus();
+                movieList.setSelectedIndex(selection);
                 me = movies.get(selection);
                 jLabel3.setText("" + me.getViewings());
                 //writeSettings();
@@ -477,7 +473,7 @@ public final class MovieViewer extends javax.swing.JFrame {
     }
 
     public boolean isMovieDVD() {
-        int selection = jList1.getSelectedIndex();
+        int selection = movieList.getSelectedIndex();
         MovieEntry me = movies.get(selection);
 
         if (fullpathOfMoviePlaying.endsWith("ifo") || fullpathOfMoviePlaying.endsWith("IFO")) {
@@ -495,7 +491,7 @@ public final class MovieViewer extends javax.swing.JFrame {
     }
 
     public String getMoviePath() {
-        int selection = jList1.getSelectedIndex();
+        int selection = movieList.getSelectedIndex();
         MovieEntry me = movies.get(selection);
         return me.getFile().getAbsolutePath();
 
@@ -573,22 +569,22 @@ public final class MovieViewer extends javax.swing.JFrame {
     }
 
     public void setCategory(String cat) {
-        jList2.requestFocus();
-        jList2.setSelectedValue(cat, true);
+        categoryList.requestFocus();
+        categoryList.setSelectedValue(cat, true);
 
         //System.out.println(cat);
         determineFilesinCategory(cat);
         updateFileCount();
 
-        jList1.setListData(new Vector(movies));
-        jList1.setSelectedIndex(0);
+        movieList.setListData(new Vector(movies));
+        movieList.setSelectedIndex(0);
     }
 
     public void createMovieEntries(ArrayList fileSet) {
         ArrayList mev = new ArrayList();
         ArrayList files = new ArrayList();
         for (int c = 0; c < fileSet.size(); c++) {
-            
+
             getMovieFiles(files, (File) fileSet.get(c));
             // System.out.println(files);
             for (int c2 = 0; c2 < files.size(); c2++) {
@@ -610,8 +606,7 @@ public final class MovieViewer extends javax.swing.JFrame {
             }
             files.clear();
         }
-        ///// temp here to change all 0 or null viewing values to 1
-        //this.writeSettings();
+
         Collections.sort(mev);
         if (jLabel6 != null)//no start it hasn't be instantiated
         {
@@ -642,61 +637,49 @@ public final class MovieViewer extends javax.swing.JFrame {
     }
 
     public void addFileToProtected() {
-        int index = jList1.getSelectedIndex();
+        int index = movieList.getSelectedIndex();
 
         MovieEntry me = (MovieEntry) movies.get(index);
 
         settings.addProctedMovie(me.getFile());
         createMovieEntries(currentFolders);
-        jList1.setListData(new Vector(movies));
-        jList1.setSelectedIndex(index);
-        //writeSettings();
+        movieList.setListData(new Vector(movies));
+        movieList.setSelectedIndex(index);
+    }
 
-    }
-    
-    public void refreshFileList(boolean DeleteFlag)
-    {
-         
-        int index = jList1.getSelectedIndex();
-         createMovieEntries(currentFolders);
-        jList1.setListData(new Vector(movies));
-        if(DeleteFlag ==true)
-        {
-            if(index == 0)
-            index =1;
-            else
-                index = index-1;
+    public void refreshFileList(boolean DeleteFlag) {
+        int index = movieList.getSelectedIndex();
+        createMovieEntries(currentFolders);
+        movieList.setListData(new Vector(movies));
+        if (DeleteFlag == true) {
+            if (index == 0) {
+                index = 1;
+            } else {
+                index = index - 1;
+            }
         }
-        jList1.setSelectedIndex(index);
+        movieList.setSelectedIndex(index);
     }
-    
 
     public void removeFileFromProtected() {
-        int index = jList1.getSelectedIndex();
+        int index = movieList.getSelectedIndex();
         MovieEntry me = (MovieEntry) movies.get(index);
         settings.removeProctedMovie(me.getFile());
         createMovieEntries(currentFolders);
-        jList1.setListData(new Vector(movies));
-        jList1.setSelectedIndex(index);
-
-        //writeSettings();
+        movieList.setListData(new Vector(movies));
+        movieList.setSelectedIndex(index);
     }
 
     public void setViewCounter(String moviepath, int count) {
-        int index = jList1.getSelectedIndex();
+        int index = movieList.getSelectedIndex();
         settings.changeViewings(moviepath, count);
         createMovieEntries(currentFolders);
-        jList1.setListData(new Vector(movies));
-        jList1.setSelectedIndex(index);
-
-        //writeSettings();
-
-
+        movieList.setListData(new Vector(movies));
+        movieList.setSelectedIndex(index);
     }
 
     private void updateFileCount() {
-        //Integer i = new Integer();
-        jLabel1.setText(Integer.toString(movies.size()));
+        movieCountLabel.setText(Integer.toString(movies.size()));
     }
 
     /**
@@ -708,7 +691,7 @@ public final class MovieViewer extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new ImageJList(startUpBackgroundImage);
+        movieList = new ImageJList(startUpBackgroundImage);
         //{
             //    Image image = imageIcon.getImage();
             // Image grayImage = GrayFilter.createDisabledImage(image); comented line
@@ -721,7 +704,7 @@ public final class MovieViewer extends javax.swing.JFrame {
                 //    }
             //};
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList()
+        categoryList = new javax.swing.JList()
         {
             Image image = imageIcon2.getImage();
             // Image grayImage = GrayFilter.createDisabledImage(image); comented line
@@ -737,7 +720,6 @@ public final class MovieViewer extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -745,6 +727,7 @@ public final class MovieViewer extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        movieCountLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Hoek's Movie Viewer");
@@ -760,72 +743,72 @@ public final class MovieViewer extends javax.swing.JFrame {
         jScrollPane1.setAlignmentX(0.2F);
         jScrollPane1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
 
-        jList1.setBackground(new java.awt.Color(0, 51, 153));
-        jList1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "MOVIES", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 3, 18), new java.awt.Color(156, 255, 255))); // NOI18N
-        jList1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        jList1.setForeground(new java.awt.Color(255, 204, 102));
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList1.setAutoscrolls(false);
-        jList1.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
-        jList1.setSelectedIndex(0);
-        jList1.setVisibleRowCount(0);
-        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+        movieList.setBackground(new java.awt.Color(0, 51, 153));
+        movieList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "MOVIES", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 3, 18), new java.awt.Color(156, 255, 255))); // NOI18N
+        movieList.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        movieList.setForeground(new java.awt.Color(255, 204, 102));
+        movieList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        movieList.setAutoscrolls(false);
+        movieList.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
+        movieList.setSelectedIndex(0);
+        movieList.setVisibleRowCount(0);
+        movieList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jList1MouseClicked(evt);
+                movieListMouseClicked(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jList1MousePressed(evt);
+                movieListMousePressed(evt);
             }
         });
-        jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+        movieList.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jList1KeyPressed(evt);
+                movieListKeyPressed(evt);
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jList1KeyReleased(evt);
+                movieListKeyReleased(evt);
             }
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jList1KeyTyped(evt);
+                movieListKeyTyped(evt);
             }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(movieList);
 
-        jList2.setBackground(new Color (220,246,220,0));
-        jList2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "CATEGORIES", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 3, 18), Color.black));
-        jList2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jList2.setModel(new javax.swing.AbstractListModel() {
+        categoryList.setBackground(new Color (220,246,220,0));
+        categoryList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "CATEGORIES", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 3, 18), Color.black));
+        categoryList.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        categoryList.setModel(new javax.swing.AbstractListModel() {
             //String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return categorisations.length; }
             public Object getElementAt(int i) { return categorisations[i]; }
         });
-        jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList2.setAlignmentX(0.2F);
-        jList2.setSelectionForeground(new java.awt.Color(0, 0, 0));
-        jList2.addMouseListener(new java.awt.event.MouseAdapter() {
+        categoryList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        categoryList.setAlignmentX(0.2F);
+        categoryList.setSelectionForeground(new java.awt.Color(0, 0, 0));
+        categoryList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jList2MouseClicked(evt);
+                categoryListMouseClicked(evt);
             }
         });
-        jList2.addFocusListener(new java.awt.event.FocusAdapter() {
+        categoryList.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jList2FocusGained(evt);
+                categoryListFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jList2FocusLost(evt);
+                categoryListFocusLost(evt);
             }
         });
-        jList2.addKeyListener(new java.awt.event.KeyAdapter() {
+        categoryList.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                categoryListKeyTyped(evt);
+            }
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jList2KeyPressed(evt);
+                categoryListKeyPressed(evt);
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jList2KeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jList2KeyTyped(evt);
+                categoryListKeyReleased(evt);
             }
         });
-        jScrollPane2.setViewportView(jList2);
+        jScrollPane2.setViewportView(categoryList);
 
         jPanel1.setBackground(new java.awt.Color(132, 176, 142));
         jPanel1.setMinimumSize(new java.awt.Dimension(100, 20));
@@ -854,13 +837,6 @@ public final class MovieViewer extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("Movies");
-
-        jLabel1.setBackground(new java.awt.Color(204, 255, 204));
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("0");
-        jLabel1.setFocusable(false);
-        jLabel1.setRequestFocusEnabled(false);
-        jLabel1.setVerifyInputWhenFocusTarget(false);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setText("All Movies Viewed");
@@ -911,6 +887,12 @@ public final class MovieViewer extends javax.swing.JFrame {
             }
         });
 
+        movieCountLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        movieCountLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        movieCountLabel.setText("0");
+        movieCountLabel.setFocusable(false);
+        movieCountLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -921,9 +903,9 @@ public final class MovieViewer extends javax.swing.JFrame {
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
+                .addComponent(movieCountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -945,13 +927,13 @@ public final class MovieViewer extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel2)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
                         .addComponent(jLabel4)
                         .addComponent(jLabel5)
                         .addComponent(jLabel6)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(movieCountLabel))
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -969,15 +951,15 @@ public final class MovieViewer extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 858, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
         );
 
         pack();
@@ -994,11 +976,11 @@ public final class MovieViewer extends javax.swing.JFrame {
 
     private boolean checkProtectedMovie(File movie, int x, int y) {
         if (checkProtected(movie.getAbsolutePath())) {
-            if (x > (xSize - 153)) {
-                x = xSize - 153;
+            if (x > (((int) getSize().getWidth()) - 153)) {
+                x = ((int) getSize().getWidth()) - 153;
             }
-            if (y > (xSize - 140)) {
-                y = xSize - 140;
+            if (y > (((int) getSize().getHeight()) - 140)) {
+                y = ((int) getSize().getHeight()) - 140;
             }
 
             pass.setVisible(x, y);
@@ -1012,7 +994,7 @@ public final class MovieViewer extends javax.swing.JFrame {
 
     }
 
-    public void setpassword(String s) {
+    public void setPassword(String s) {
         password = s;
     }
 
@@ -1060,10 +1042,10 @@ public final class MovieViewer extends javax.swing.JFrame {
         }
     }
 
-    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+    private void movieListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_movieListMouseClicked
 
         if (!(evt.getButton() == java.awt.event.MouseEvent.BUTTON3)) {
-            int selection = jList1.getSelectedIndex();
+            int selection = movieList.getSelectedIndex();
             MovieEntry me = movies.get(selection);
             File movie = me.getFile();
             jLabel3.setText("" + me.getViewings());
@@ -1075,14 +1057,14 @@ public final class MovieViewer extends javax.swing.JFrame {
                     settings.updateViewings(movie.getAbsolutePath());
                     //writeSettings();
                     createMovieEntries(currentFolders);
-                    jList1.setListData(new Vector(movies));
+                    movieList.setListData(new Vector(movies));
                     me = movies.get(selection);
                     jLabel3.setText("" + me.getViewings());
                     showMovie(movie.getAbsolutePath());
                 }
             }
         } else {
-            int selection = jList1.getSelectedIndex();
+            int selection = movieList.getSelectedIndex();
             MovieEntry me = movies.get(selection);
             jLabel3.setText("" + me.getViewings());
             File movie = me.getFile();
@@ -1092,19 +1074,22 @@ public final class MovieViewer extends javax.swing.JFrame {
                 RightClickContext rcc = new RightClickContext(this, true, me);
                 int xpos = evt.getX();
                 int ypos = evt.getY() + 20;
-                if (xpos > (xSize - 153)) {
-                    xpos = xSize - 153;
+
+                if (xpos > (((int) getSize().getWidth()) - 153)) {
+                    xpos = ((int) getSize().getWidth()) - 153;
                 }
-                if (ypos > (ySize - 140)) {
-                    ypos = ySize - 140;
+
+                if (ypos > (((int) getSize().getHeight()) - 140)) {
+                    ypos = ((int) getSize().getHeight()) - 140;
                 }
+
                 rcc.setLocation(xpos, ypos);
                 rcc.setCheck(checkProtected(movie.getAbsolutePath()));
                 rcc.setVisible(true);
             }
 
         }
-    }//GEN-LAST:event_jList1MouseClicked
+    }//GEN-LAST:event_movieListMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         SetupScreen1 s = new SetupScreen1(this);
@@ -1113,48 +1098,48 @@ public final class MovieViewer extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     @SuppressWarnings("static-access")
-    private void jList1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList1KeyTyped
+    private void movieListKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_movieListKeyTyped
         if (evt.isControlDown()) {
             down = true;
         }
         if (evt.getKeyChar() == evt.VK_ENTER) {
-            int selection = jList1.getSelectedIndex();
+            int selection = movieList.getSelectedIndex();
             MovieEntry me = movies.get(selection);
             File movie = me.getFile();
-            Point location = jList1.indexToLocation(selection);
+            Point location = movieList.indexToLocation(selection);
             boolean check = checkProtectedMovie(movie, location.x, location.y + 20);
             if (check) {
 
                 settings.updateViewings(movie.getAbsolutePath());
                 //writeSettings();
                 createMovieEntries(currentFolders);
-                jList1.setListData(new Vector(movies));
-                jList1.setSelectedIndex(selection);
+                movieList.setListData(new Vector(movies));
+                movieList.setSelectedIndex(selection);
                 me = movies.get(selection);
                 jLabel3.setText("" + me.getViewings());
                 showMovie(movie.getAbsolutePath());
             }
         }
-    }//GEN-LAST:event_jList1KeyTyped
+    }//GEN-LAST:event_movieListKeyTyped
 
-    private void jList2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jList2FocusGained
-        jList2.setSelectionBackground(Color.YELLOW);
-    }//GEN-LAST:event_jList2FocusGained
+    private void categoryListFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_categoryListFocusGained
+        categoryList.setSelectionBackground(Color.YELLOW);
+    }//GEN-LAST:event_categoryListFocusGained
 
-    private void jList2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jList2FocusLost
-        jList2.setSelectionBackground(new Color(184, 207, 229, 150));
-    }//GEN-LAST:event_jList2FocusLost
+    private void categoryListFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_categoryListFocusLost
+        categoryList.setSelectionBackground(new Color(184, 207, 229, 150));
+    }//GEN-LAST:event_categoryListFocusLost
 
-    private void jList2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList2MouseClicked
+    private void categoryListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_categoryListMouseClicked
 
         //int index = jList2.getSelectedIndex();
-        String imageLocation = settings.getBackgroundImage((String) jList2.getSelectedValue());
-        determineFilesinCategory((String) jList2.getSelectedValue());
+        String imageLocation = settings.getBackgroundImage((String) categoryList.getSelectedValue());
+        determineFilesinCategory((String) categoryList.getSelectedValue());
         updateFileCount();
 
-        jList1.setListData(new Vector(movies));
-        jList1.setSelectedIndex(0);
-        ImageJList ijl = (ImageJList) jList1;
+        movieList.setListData(new Vector(movies));
+        movieList.setSelectedIndex(0);
+        ImageJList ijl = (ImageJList) movieList;
         if (imageLocation != null)//no image set
         {
             ijl.setImageIcon(imageLocation);
@@ -1163,9 +1148,9 @@ public final class MovieViewer extends javax.swing.JFrame {
         }
 
 
-    }//GEN-LAST:event_jList2MouseClicked
+    }//GEN-LAST:event_categoryListMouseClicked
 
-    private void jList2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList2KeyReleased
+    private void categoryListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_categoryListKeyReleased
         int code = evt.getKeyCode();
         if (down && code == 88) {
             this.dispose();
@@ -1181,13 +1166,13 @@ public final class MovieViewer extends javax.swing.JFrame {
 
 
         if (code == java.awt.event.KeyEvent.VK_DOWN || code == java.awt.event.KeyEvent.VK_UP) {
-            determineFilesinCategory((String) jList2.getSelectedValue());
+            determineFilesinCategory((String) categoryList.getSelectedValue());
             updateFileCount();
-            jList1.setListData(new Vector(movies));
-            jList1.setSelectedIndex(0);
+            movieList.setListData(new Vector(movies));
+            movieList.setSelectedIndex(0);
 
-            String imageLocation = settings.getBackgroundImage((String) jList2.getSelectedValue());
-            ImageJList ijl = (ImageJList) jList1;
+            String imageLocation = settings.getBackgroundImage((String) categoryList.getSelectedValue());
+            ImageJList ijl = (ImageJList) movieList;
             if (imageLocation != null)//no image set
             {
                 ijl.setImageIcon(imageLocation);
@@ -1195,16 +1180,16 @@ public final class MovieViewer extends javax.swing.JFrame {
                 ijl.setImageIcon("defaultbackground.gif");
             }
         }
-    }//GEN-LAST:event_jList2KeyReleased
+    }//GEN-LAST:event_categoryListKeyReleased
 
-    private void jList1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MousePressed
+    private void movieListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_movieListMousePressed
         if ((evt.getButton() == java.awt.event.MouseEvent.BUTTON3)) {
-            int location = jList1.locationToIndex(new Point(evt.getX(), evt.getY()));
-            jList1.setSelectedIndex(location);
+            int location = movieList.locationToIndex(new Point(evt.getX(), evt.getY()));
+            movieList.setSelectedIndex(location);
         }
-    }//GEN-LAST:event_jList1MousePressed
+    }//GEN-LAST:event_movieListMousePressed
 
-    private void jList1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList1KeyReleased
+    private void movieListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_movieListKeyReleased
         int code = evt.getKeyCode();
 
         if (down && code == 88) {
@@ -1217,59 +1202,59 @@ public final class MovieViewer extends javax.swing.JFrame {
             showHide();
         }
 
-        int selection = jList1.getSelectedIndex();
+        int selection = movieList.getSelectedIndex();
         if (!movies.isEmpty()) {
             MovieEntry me = movies.get(selection);
             jLabel3.setText("" + me.getViewings());
         }
 
 
-    }//GEN-LAST:event_jList1KeyReleased
+    }//GEN-LAST:event_movieListKeyReleased
 
     private void setSearch(String search) {
         this.search = search;
 
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        int selection = jList1.getSelectedIndex();
+        int selection = movieList.getSelectedIndex();
         //JButton jt = (JButton)evt.getSource();
         toggleAlpha();
         createMovieEntries(currentFolders);
-        jList1.setListData(new Vector(movies));
-        jList1.setSelectedIndex(selection);
+        movieList.setListData(new Vector(movies));
+        movieList.setSelectedIndex(selection);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         showHide();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jList2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList2KeyTyped
+    private void categoryListKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_categoryListKeyTyped
         if (evt.isControlDown()) {
             down = true;
         }
-    }//GEN-LAST:event_jList2KeyTyped
+    }//GEN-LAST:event_categoryListKeyTyped
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         writeSettings();
-        
+
         System.exit(0);
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jList2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList2KeyPressed
+    private void categoryListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_categoryListKeyPressed
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_TAB) {
-            jList1.requestFocus();
+            movieList.requestFocus();
         }
 
-    }//GEN-LAST:event_jList2KeyPressed
+    }//GEN-LAST:event_categoryListKeyPressed
 
-    private void jList1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList1KeyPressed
+    private void movieListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_movieListKeyPressed
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_TAB) {
-            jList2.requestFocus();
+            categoryList.requestFocus();
 
 
         }
 
-    }//GEN-LAST:event_jList1KeyPressed
+    }//GEN-LAST:event_movieListKeyPressed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         new AboutBox(this, true).setVisible(true);
@@ -1307,11 +1292,11 @@ public final class MovieViewer extends javax.swing.JFrame {
             // Add shutdown hook to release lock when application shutdown
 
             final MovieViewer viewer = new MovieViewer();
-            
+
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public void run() {
                     viewer.writeSettings();
-                    
+
                     if (lock != null) {
                         try {
                             lock.release();
@@ -1344,22 +1329,22 @@ public final class MovieViewer extends javax.swing.JFrame {
         // MovieViewer mv = new MovieViewer();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList categoryList;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JTextField jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel movieCountLabel;
+    private javax.swing.JList movieList;
     // End of variables declaration//GEN-END:variables
 
     private void getViewings() {
@@ -1633,8 +1618,8 @@ public final class MovieViewer extends javax.swing.JFrame {
 
 
             jScrollPane2.setVisible(true);
-            jList2.setSize(100, 700);
-            jList2.requestFocus();
+            categoryList.setSize(100, 700);
+            categoryList.requestFocus();
             p.revalidate();
             p.repaint();
             showcat = true;
@@ -1644,7 +1629,7 @@ public final class MovieViewer extends javax.swing.JFrame {
 
             JPanel p = (JPanel) this.getContentPane();
             jScrollPane2.setVisible(false);
-            jList1.requestFocus();
+            movieList.requestFocus();
             p.revalidate();
             p.repaint();
             showcat = false;

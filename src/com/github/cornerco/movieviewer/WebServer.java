@@ -39,7 +39,7 @@ class WebServer implements HttpConstants {
     protected static Properties props = new Properties();
 
     /* Where worker threads stand idle */
-    static ArrayList threads = new ArrayList();
+    static ArrayList<Worker> threads = new ArrayList<>();
 
     /* the web server's virtual root */
     static File root;
@@ -192,7 +192,7 @@ class Worker extends WebServer implements HttpConstants, Runnable {
              * than numHandler connections.
              */
             s = null;
-            ArrayList pool = WebServer.threads;
+            ArrayList<Worker> pool = WebServer.threads;
             synchronized (pool) {
                 if (pool.size() >= WebServer.workers) {
                     /* too many threads, exit this one */
@@ -654,7 +654,7 @@ class Worker extends WebServer implements HttpConstants, Runnable {
     }
 
     /* mapping of file extensions to content-types */
-    static java.util.HashMap map = new java.util.HashMap();
+    static HashMap<String, String> map = new HashMap<>();
 
     static {
         fillMap();
