@@ -67,6 +67,12 @@ public final class MovieViewer extends javax.swing.JFrame {
         getDefaultProperties();
         startUpCategory = settings.getStartUpCategory();
         categorisations = settings.getAllCategories();
+        
+        if(categorisations.length == 0) {
+           settings.categories.put(defaultCat, new ArrayList());   
+            startUpCategory = settings.getStartUpCategory();  
+            categorisations = settings.getAllCategories();       
+        }
 
         System.out.println(startUpCategory);
         if (startUpCategory == null) {
@@ -902,17 +908,17 @@ public final class MovieViewer extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(movieCountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
-                .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel4)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(79, 79, 79)
                 .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1316,8 +1322,9 @@ public final class MovieViewer extends javax.swing.JFrame {
                     }).start();
                 }
             });
-        } catch (IOException e) {
-            throw new RuntimeException("Could not start process.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1343,6 +1350,7 @@ public final class MovieViewer extends javax.swing.JFrame {
         Properties properties = new Properties();
         FileInputStream fin = null;
         try {
+            new File("NumberOfViewings.mvd").createNewFile();
             FileInputStream catInput = new FileInputStream("NumberOfViewings.mvd");
             properties.load(catInput);
             catInput.close();
@@ -1367,6 +1375,7 @@ public final class MovieViewer extends javax.swing.JFrame {
     private void getProtectedMovies() {
         Properties properties = new Properties();
         try {
+            new File("ProtectedMovies.mvd").createNewFile();
             FileInputStream catInput = new FileInputStream("ProtectedMovies.mvd");
             properties.load(catInput);
             catInput.close();
@@ -1374,7 +1383,7 @@ public final class MovieViewer extends javax.swing.JFrame {
             e.printStackTrace();
         }
 
-        String protectedList = properties.getProperty("protected");
+        String protectedList = properties.getProperty("protected", "");
 
         StringTokenizer st = new StringTokenizer(protectedList, ",");
 
@@ -1407,7 +1416,13 @@ public final class MovieViewer extends javax.swing.JFrame {
 
         CategoryNames.setProperty(catNameVariable, categoryList);
         CategoryNames.setProperty(defaultCat, startUpCategory);
-
+        
+        try {
+            new File(catNameFile).createNewFile();
+        } catch (IOException ex) {
+            Logger.getLogger(MovieViewer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         try {
             FileOutputStream out = new FileOutputStream(catNameFile);
             CategoryNames.store(out, "---No Comment---");
@@ -1421,19 +1436,21 @@ public final class MovieViewer extends javax.swing.JFrame {
         Properties properties = new Properties();
         FileInputStream fin = null;
         try {
+            new File(catNameFile).createNewFile();
             FileInputStream catInput = new FileInputStream(catNameFile);
             properties.load(catInput);
             catInput.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String catNamesList = properties.getProperty(catNameVariable);
+        String catNamesList = properties.getProperty(catNameVariable, "");      
         StringTokenizer t = new StringTokenizer(catNamesList, ",");
 
 
         try {
+            new File(catList).createNewFile();
             fin = new FileInputStream(catList);
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
         while (t.hasMoreTokens()) {
@@ -1470,6 +1487,7 @@ public final class MovieViewer extends javax.swing.JFrame {
         Properties properties = new Properties();
 
         try {
+            new File(backgroundImagesFile).createNewFile();
             FileInputStream backgroundInput = new FileInputStream(backgroundImagesFile);
             properties.load(backgroundInput);
             backgroundInput.close();
