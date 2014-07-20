@@ -108,7 +108,6 @@ public final class MovieViewer extends javax.swing.JFrame {
 
         setSize(bounds.getSize());
         setLocation(bounds.getLocation());
-        setVisible(true);
 
         playing = false;
         p = (JPanel) this.getContentPane();
@@ -279,8 +278,6 @@ public final class MovieViewer extends javax.swing.JFrame {
     }
 
     public void writeSettings() {
-        System.out.println("writing settings");
-
 //        try {
 //            // Use a FileOutputStream to send data to a file
 //            // called myobject.data.
@@ -1215,9 +1212,9 @@ public final class MovieViewer extends javax.swing.JFrame {
         this.search = search;
 
     }
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         int selection = movieList.getSelectedIndex();
-        //JButton jt = (JButton)evt.getSource();
         toggleAlpha();
         createMovieEntries(currentFolders);
         movieList.setListData(new Vector(movies));
@@ -1250,10 +1247,7 @@ public final class MovieViewer extends javax.swing.JFrame {
     private void movieListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_movieListKeyPressed
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_TAB) {
             categoryList.requestFocus();
-
-
         }
-
     }//GEN-LAST:event_movieListKeyPressed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -1273,27 +1267,23 @@ public final class MovieViewer extends javax.swing.JFrame {
 //            Logger.getLogger(MovieViewer.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 
-
         try {
             f = new File("movieviewer.lock");
-            // Check if the lock exist
             if (f.exists()) {
-                // if exist try to delete it
                 f.delete();
             }
-            // Try to get the lock
+
             channel = new RandomAccessFile(f, "rw").getChannel();
             lock = channel.tryLock();
             if (lock == null) {
-                // File is lock by other application
                 channel.close();
                 throw new RuntimeException("Only 1 instance of MovieViewer can run.");
             }
-            // Add shutdown hook to release lock when application shutdown
 
             final MovieViewer viewer = new MovieViewer();
 
             Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
                 public void run() {
                     viewer.writeSettings();
 
@@ -1310,23 +1300,24 @@ public final class MovieViewer extends javax.swing.JFrame {
                 }
             });
 
-            //Your application tasks here..
-            //System.out.println("Running");
-
             java.awt.EventQueue.invokeLater(new Runnable() {
+                @Override
                 public void run() {
-                    viewer.setVisible(true);
+                    SplashFrame splash = new SplashFrame();
+                    splash.setVisible(true);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            viewer.loadMovies();
+                            viewer.setVisible(true);
+                        }
+                    }).start();
                 }
             });
-
-
         } catch (IOException e) {
             throw new RuntimeException("Could not start process.", e);
         }
-
-
-
-        // MovieViewer mv = new MovieViewer();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList categoryList;
@@ -1615,8 +1606,6 @@ public final class MovieViewer extends javax.swing.JFrame {
 
     private void showHide() {
         if (!showcat) {
-
-
             jScrollPane2.setVisible(true);
             categoryList.setSize(100, 700);
             categoryList.requestFocus();
@@ -1624,9 +1613,7 @@ public final class MovieViewer extends javax.swing.JFrame {
             p.repaint();
             showcat = true;
             jButton3.setText("HIDE");
-
         } else {
-
             JPanel p = (JPanel) this.getContentPane();
             jScrollPane2.setVisible(false);
             movieList.requestFocus();
@@ -1634,9 +1621,13 @@ public final class MovieViewer extends javax.swing.JFrame {
             p.repaint();
             showcat = false;
             jButton3.setText("SHOW");
-
         }
+    }
 
-
+    private void loadMovies() {
+        try {
+            //Thread.sleep(40000);
+        } catch (Exception ex) {
+        }
     }
 }
