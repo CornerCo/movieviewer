@@ -1303,13 +1303,14 @@ public final class MovieViewer extends javax.swing.JFrame {
             java.awt.EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    SplashFrame splash = new SplashFrame();
+                    final SplashFrame splash = new SplashFrame();
                     splash.setVisible(true);
 
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             viewer.loadMovies();
+                            splash.dispose();
                             viewer.setVisible(true);
                         }
                     }).start();
