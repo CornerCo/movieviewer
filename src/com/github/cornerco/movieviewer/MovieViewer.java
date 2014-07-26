@@ -131,7 +131,14 @@ public final class MovieViewer extends javax.swing.JFrame {
 
     public void refreshCategoryList() {
         Object selected = categoryList.getSelectedValue();
-        categoryList.setListData(new ArrayList<>(MovieManager.getInstance().getCategories()).toArray(new Category[0]));
+        ArrayList<Category> data = new ArrayList<>(MovieManager.getInstance().getCategories());
+        Collections.sort(data, new Comparator<Category>() {
+            @Override
+            public int compare(Category a, Category b) {
+                return a.getName().toLowerCase().compareTo(b.getName().toLowerCase());
+            }
+        });
+        categoryList.setListData(data.toArray(new Category[0]));
 
         if (activeCategory == null || !MovieManager.getInstance().getCategories().contains(activeCategory)) {
             activeCategory = null;
@@ -606,7 +613,6 @@ public final class MovieViewer extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_movieListValueChanged
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aboutButton;
     private javax.swing.JList<Category> categoryList;
