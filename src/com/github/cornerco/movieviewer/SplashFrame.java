@@ -33,7 +33,7 @@ public class SplashFrame extends JFrame {
     public SplashFrame() {
         initComponents();
 
-        actionLabel.setText(ACTIONS[ACTIONS.length - 1]);
+        actionLabel.setText(ACTIONS[new Random().nextInt(ACTIONS.length)]);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
