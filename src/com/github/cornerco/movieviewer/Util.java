@@ -88,7 +88,7 @@ public class Util {
                 idx = name.length();
             }
 
-            return name.substring(0, idx).toLowerCase();
+            return name.substring(0, idx).toLowerCase() + "  ";
         }
     }
 

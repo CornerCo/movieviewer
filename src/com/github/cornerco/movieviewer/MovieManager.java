@@ -108,14 +108,14 @@ public class MovieManager {
     }
 
     private void loadMetadata() {
-        try {
-            movieViews.load(new FileInputStream(Util.getMovieViewsFile()));
+        try (FileInputStream f = new FileInputStream(Util.getMovieViewsFile())) {
+            movieViews.load(f);
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        try {
-            movieLocks.load(new FileInputStream(Util.getMovieLocksFile()));
+
+        try (FileInputStream f = new FileInputStream(Util.getMovieLocksFile())) {
+            movieLocks.load(f);
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -144,13 +144,15 @@ public class MovieManager {
                 movieLocks.setProperty(m.getFile().getAbsolutePath(), String.valueOf(m.isProtected()));
             }
         }
-        try {
-            movieViews.store(new FileOutputStream(Util.getMovieViewsFile()), "");
+
+        try (FileOutputStream f = new FileOutputStream(Util.getMovieViewsFile())) {
+            movieViews.store(f, null);
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
-            movieLocks.store(new FileOutputStream(Util.getMovieLocksFile()), "");
+
+        try (FileOutputStream f = new FileOutputStream(Util.getMovieLocksFile())) {
+            movieLocks.store(f, null);
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -159,15 +161,15 @@ public class MovieManager {
     private void loadCategories() {
         Properties categoryFolders = new Properties();
         Properties categoryBackgrounds = new Properties();
-        
-        try {
-            categoryFolders.load(new FileInputStream(Util.getCategoryFoldersFile()));
+
+        try (FileInputStream f = new FileInputStream(Util.getCategoryFoldersFile())) {
+            categoryFolders.load(f);
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        try {
-            categoryBackgrounds.load(new FileInputStream(Util.getCategoryBackgroundsFile()));
+
+        try (FileInputStream f = new FileInputStream(Util.getCategoryBackgroundsFile())) {
+            categoryBackgrounds.load(f);
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -177,10 +179,10 @@ public class MovieManager {
             Category c = new Category(name, categoryBackgrounds.getProperty(name, Util.getMovieBackgroundPath()));
 
             for (String folder : ((String) entry.getValue()).split(",")) {
-                if(folder.isEmpty()) {
+                if (folder.isEmpty()) {
                     continue;
                 }
-                
+
                 c.addFolder(new File(folder));
             }
 
@@ -203,23 +205,23 @@ public class MovieManager {
             categoryFolders.setProperty(c.getName(), folders.toString());
             categoryBackgrounds.setProperty(c.getName(), c.getBackground());
         }
-        
-        try {        
-            categoryFolders.store(new FileOutputStream(Util.getCategoryFoldersFile()), "");
+
+        try (FileOutputStream f = new FileOutputStream(Util.getCategoryFoldersFile())) {
+            categoryFolders.store(f, null);
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        try {
-            categoryBackgrounds.store(new FileOutputStream(Util.getCategoryBackgroundsFile()), "");
+
+        try (FileOutputStream f = new FileOutputStream(Util.getCategoryBackgroundsFile())) {
+            categoryBackgrounds.store(f, null);
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void loadSettings() {
-        try {
-            settings.load(new FileInputStream(Util.getSettingsFile()));
+        try (FileInputStream f = new FileInputStream(Util.getSettingsFile())) {
+            settings.load(f);
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -232,9 +234,9 @@ public class MovieManager {
 
     public void saveSettings() {
         settings.setProperty("defaultCategory", defaultCategory.getName());
-        
-        try {
-            settings.store(new FileOutputStream(Util.getSettingsFile()), "");
+
+        try (FileOutputStream f = new FileOutputStream(Util.getSettingsFile())) {
+            settings.store(f, null);
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }

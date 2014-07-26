@@ -18,8 +18,6 @@ import javax.swing.ListCellRenderer;
  */
 public class MovieCellRenderer extends JLabel implements ListCellRenderer<Movie> {
 
-    private static final Color HIGHLIGHT_COLOR = new Color(0, 0, 128);
-
     public MovieCellRenderer() {
         setOpaque(true);
         setIconTextGap(12);
@@ -29,12 +27,14 @@ public class MovieCellRenderer extends JLabel implements ListCellRenderer<Movie>
     public Component getListCellRendererComponent(JList<? extends Movie> list, Movie value, int index, boolean isSelected, boolean cellHasFocus) {
         Movie entry = (Movie) value;
         setFont(new Font("Tahoma", 1, 12));
-        
+
         int viewings = entry.getViews();
         setText(entry.getName());
 
         if (entry.isProtected()) {
             setIcon(new ImageIcon(getClass().getResource("/com/github/cornerco/movieviewer/resources/lock.gif")));
+        } else {
+            setIcon(null);
         }
 
         if (isSelected) {

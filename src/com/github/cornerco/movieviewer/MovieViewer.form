@@ -168,23 +168,23 @@
                   <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton3" min="-2" max="-2" attributes="1"/>
-                  <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="watchedSelectedLabel" min="-2" pref="36" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="numMoviesLabel" min="-2" pref="36" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="numMoviesViewedLabel" min="-2" pref="32" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
+                  <Component id="numMoviesViewedLabel" min="-2" pref="48" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                   <Component id="rotateSortMethodButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="aboutButton" min="-2" pref="71" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="exitButton" min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -195,17 +195,16 @@
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="exitButton" alignment="0" min="-2" pref="26" max="-2" attributes="1"/>
                   <Component id="jButton3" max="32767" attributes="0"/>
-                  <Component id="rotateSortMethodButton" alignment="0" max="32767" attributes="1"/>
-                  <Component id="aboutButton" alignment="0" max="32767" attributes="1"/>
-                  <Component id="jLabel5" alignment="0" max="32767" attributes="1"/>
-                  <Component id="numMoviesViewedLabel" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
-                      <Component id="jLabel2" max="32767" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="aboutButton" alignment="3" max="32767" attributes="1"/>
+                      <Component id="rotateSortMethodButton" alignment="3" max="32767" attributes="1"/>
                   </Group>
-                  <Component id="numMoviesLabel" alignment="0" max="32767" attributes="0"/>
                   <Component id="jLabel6" alignment="0" max="32767" attributes="1"/>
                   <Component id="watchedSelectedLabel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jLabel2" alignment="0" max="32767" attributes="0"/>
+                  <Component id="numMoviesLabel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jLabel5" alignment="0" max="32767" attributes="1"/>
+                  <Component id="numMoviesViewedLabel" alignment="0" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
