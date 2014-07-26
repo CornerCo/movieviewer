@@ -57,7 +57,7 @@ public final class MovieViewer extends javax.swing.JFrame {
             return buttonLabel;
         }
     }
-    private SortMethod sortMethod = SortMethod.VIEWINGS;
+    private SortMethod sortMethod = SortMethod.ALPHABETICAL;
     private boolean showCategoriesList = true;
     private Category activeCategory;
 
