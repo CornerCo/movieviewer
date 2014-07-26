@@ -78,12 +78,17 @@ public class Util {
         return true;
     }
 
-    public static String getFriendlyName(String path) {
-        if (path.endsWith("video_ts.ifo")) {
-            return path.substring(0, path.lastIndexOf(File.pathSeparator));
+    public static String getFriendlyName(File movie) {
+        String name = movie.getName().toLowerCase();
+        if (name.contains("video_ts")) {
+            return getFriendlyName(movie.getParentFile());
         } else {
-            String[] split = path.toLowerCase().split(File.pathSeparator);
-            return split[split.length - 1].substring(0, Math.max(0, split[split.length - 1].indexOf(".")));
+            int idx = name.indexOf(".");
+            if (idx < 0) {
+                idx = name.length();
+            }
+
+            return name.substring(0, idx).toLowerCase();
         }
     }
 

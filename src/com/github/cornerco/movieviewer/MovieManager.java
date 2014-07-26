@@ -75,7 +75,7 @@ public class MovieManager {
         int views = Integer.parseInt(movieViews.getProperty(movie.getAbsolutePath(), "0"));
         boolean protect = Boolean.parseBoolean(movieLocks.getProperty(movie.getAbsolutePath(), "false"));
 
-        return new Movie(Util.getFriendlyName(movie.getName()), movie, protect, views);
+        return new Movie(Util.getFriendlyName(movie), movie, protect, views);
     }
 
     public void addMovieViewed() {
