@@ -79,8 +79,12 @@ public class Util {
     }
 
     public static String getFriendlyName(String path) {
-        String[] split = path.toLowerCase().split(File.pathSeparator);
-        return split[split.length - 1].substring(0, Math.max(0, split[split.length - 1].indexOf(".")));
+        if (path.endsWith("video_ts.ifo")) {
+            return path.substring(0, path.lastIndexOf(File.pathSeparator));
+        } else {
+            String[] split = path.toLowerCase().split(File.pathSeparator);
+            return split[split.length - 1].substring(0, Math.max(0, split[split.length - 1].indexOf(".")));
+        }
     }
 
     public static boolean isMovieName(File file) {
