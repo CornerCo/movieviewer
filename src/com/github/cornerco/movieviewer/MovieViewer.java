@@ -10,9 +10,11 @@ package com.github.cornerco.movieviewer;
  */
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.util.*;
 import java.io.*;
 import javax.swing.*;
@@ -61,7 +63,7 @@ public final class MovieViewer extends javax.swing.JFrame {
 
     public MovieViewer() {
         setUndecorated(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         initComponents();
 
@@ -70,7 +72,8 @@ public final class MovieViewer extends javax.swing.JFrame {
         movieList.setSelectedIndex(0);
 
         Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-        setSize(bounds.getSize());
+        setSize(bounds.width, bounds.height);
+        setPreferredSize(new Dimension(bounds.width, bounds.height));
         setLocation(new Point(0, 0));
         getContentPane().setBackground(new Color(132, 176, 142));
 
