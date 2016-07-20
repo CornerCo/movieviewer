@@ -3,6 +3,7 @@ package com.github.cornerco.movieviewer;
 import java.io.File;
 import javax.swing.JDialog;
 
+
 /*
  * SetupScreen.java
  *
