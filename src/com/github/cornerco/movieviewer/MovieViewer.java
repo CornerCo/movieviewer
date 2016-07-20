@@ -68,6 +68,7 @@ public final class MovieViewer extends javax.swing.JFrame {
         initComponents();
 
         movieList.setFocusTraversalKeysEnabled(false);
+        categoryList.setFocusTraversalKeysEnabled(false);
         movieList.setCellRenderer(new MovieCellRenderer());
         movieList.setSelectedIndex(0);
 
