@@ -40,8 +40,6 @@ public class Main {
                     try {
                         lock.release();
                         channel.close();
-
-
                     } catch (IOException ex) {
                         Logger.getLogger(MovieViewer.class.getName()).log(Level.SEVERE, null, ex);
                     }

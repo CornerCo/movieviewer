@@ -26,6 +26,7 @@ public class SelectFileDialog extends JDialog {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setVisible(true);
+        
     }
 
     /**

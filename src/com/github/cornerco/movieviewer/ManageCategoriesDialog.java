@@ -211,6 +211,7 @@ public class ManageCategoriesDialog extends JDialog {
     private void setBackgroundButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setBackgroundButtonActionPerformed
         Category category = categoryList.getSelectedValue();
         if (category != null) {
+
             File selected = new SelectFileDialog(this).getSelectedFile();
             if (selected != null) {
                 category.setBackground(selected.getAbsolutePath());
