@@ -532,7 +532,7 @@ public final class MovieViewer extends javax.swing.JFrame {
 
     private void categoryListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_categoryListKeyReleased
         switch (evt.getKeyCode()) {
-            case KeyEvent.VK_X:
+            case KeyEvent.VK_Q:
                 if (evt.isControlDown()) {
                     dispose();
                 }
@@ -559,7 +559,7 @@ public final class MovieViewer extends javax.swing.JFrame {
 
     private void movieListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_movieListKeyReleased
         switch (evt.getKeyCode()) {
-            case KeyEvent.VK_X:
+            case KeyEvent.VK_Q:
                 if (evt.isControlDown()) {
                     MovieManager.getInstance().terminate();
                 }
