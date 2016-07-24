@@ -534,9 +534,16 @@ public final class MovieViewer extends javax.swing.JFrame {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_Q:
                 if (evt.isControlDown()) {
-                    dispose();
+                     MovieManager.getInstance().terminate();
                 }
                 break;
+            case KeyEvent.VK_A:
+                if (evt.isControlDown()) {
+                     rotateSortMethod();
+                }
+                break;
+           
+               
             case KeyEvent.VK_Z:
                 toggleShowCategoriesList();
                 break;
@@ -562,6 +569,11 @@ public final class MovieViewer extends javax.swing.JFrame {
             case KeyEvent.VK_Q:
                 if (evt.isControlDown()) {
                     MovieManager.getInstance().terminate();
+                }
+                break;
+            case KeyEvent.VK_A:
+                if (evt.isControlDown()) {
+                     rotateSortMethod();
                 }
                 break;
             case KeyEvent.VK_Z:
