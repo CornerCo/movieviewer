@@ -66,7 +66,7 @@ public class SelectFileDialog extends JDialog {
 
     private void chooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooserActionPerformed
         if (evt.getActionCommand().equals("ApproveSelection")) {
-            selected = chooser.getSelectedFile();
+            selected = chooser.getSelectedFile();       
         }
 
         dispose();
