@@ -19,6 +19,8 @@ public class Main {
     public static final int REV = 0;
 
     public static void main(String args[]) throws IOException {
+        DebugExceptionHandler.install();
+
         final File f = new File("movieviewer.lock");
         if (f.exists()) {
             f.delete();
