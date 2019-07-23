@@ -91,6 +91,10 @@ public class MovieManager {
     }
 
     public void saveData() {
+        if (DebugExceptionHandler.hasPaniced()) {
+            return;
+        }
+
         try {
             saveMetadata();
         } catch (Exception e) {

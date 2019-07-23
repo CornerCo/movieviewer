@@ -10,7 +10,17 @@ import javax.swing.JTextArea;
  * @author khoek
  */
 public class DebugExceptionHandler implements Thread.UncaughtExceptionHandler {
+    
+    private static volatile boolean panicStatus = false;
 
+    public static boolean hasPaniced() {
+        return panicStatus;
+    }
+    
+    private static void panic() {
+        panicStatus = true;
+    }
+    
     public static void install() {
         Thread.setDefaultUncaughtExceptionHandler(new DebugExceptionHandler());
         System.setProperty("sun.awt.exception.handler", DebugExceptionHandler.class.getName());
@@ -31,6 +41,8 @@ public class DebugExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     private void handleException(String threadName, Throwable e) {
+        DebugExceptionHandler.panic();
+        
         StringBuilder sb = new StringBuilder("Exception in thread '");
         sb.append(threadName);
         sb.append("': ");
